@@ -1,0 +1,15 @@
+{
+  "name": "Golf 成績卡",
+  "short_name": "Golf成績卡",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#17408B",
+  "icons": [
+    {
+      "src": "icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
