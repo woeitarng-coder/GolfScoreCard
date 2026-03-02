@@ -7,9 +7,10 @@
   "theme_color": "#17408B",
   "icons": [
     {
-      "src": "icon.jpg",
+      "src": "https://woeitarng-coder.github.io/GolfScoreCard/icon.jpg?v=2",
       "sizes": "512x512",
-      "type": "image/jpeg"
+      "type": "image/jpeg",
+      "purpose": "any maskable"
     }
   ]
 }
