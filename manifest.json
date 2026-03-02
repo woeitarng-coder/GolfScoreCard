@@ -1,13 +1,13 @@
 {
   "name": "Golf 成績卡",
   "short_name": "Golf成績卡",
-  "start_url": "./index.html",
+  "start_url": "https://woeitarng-coder.github.io/GolfScoreCard/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#17408B",
   "icons": [
     {
-      "src": "./icon.png",
+      "src": "https://woeitarng-coder.github.io/GolfScoreCard/icon.png?v=3",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
