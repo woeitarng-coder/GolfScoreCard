@@ -21,6 +21,25 @@
     <link rel="manifest" href="https://woeitarng-coder.github.io/GolfScoreCard/manifest.json?v=3">
 
     <style>
+        /* 強制去除所有邊距，並且鎖定畫面不讓背景滑動 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #17408B;
+        }
+        /* 強制 iframe 填滿整個視窗大小 */
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            display: block;
+        }
         /* 強制外衣鎖定在可視視窗內，不允許滾動 */
         html, body {
             margin: 0; padding: 0; width: 100%; 
