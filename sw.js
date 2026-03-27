@@ -1,6 +1,6 @@
 // 每次你在 GitHub 改了 index.html 的內容，請記得把這裡的 v2 改成 v3, v4...
 const CACHE_PREFIX = 'general-cache-';
-const CACHE_VERSION = 'v2'; 
+const CACHE_VERSION = 'v3'; 
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
 const urlsToCache = [
   './',
