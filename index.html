@@ -3,159 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Golf 成績卡</title>
-
-    <meta property="og:title" content="Golf 成績卡">
-    <meta property="og:description" content="專屬的高爾夫成績紀錄工具">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://woeitarng-coder.github.io/GolfScoreCard/icon.png?v=7">
-    <meta property="og:url" content="https://woeitarng-coder.github.io/GolfScoreCard/">
-
-    <link rel="icon" type="image/png" href="https://woeitarng-coder.github.io/GolfScoreCard/icon.png?v=7">
-
-    <link rel="apple-touch-icon" href="https://woeitarng-coder.github.io/GolfScoreCard/icon.png?v=7">
+    <title>Golf記分卡</title> 
+    
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Golf成績卡">
+    
+    <link rel="icon" href="./icon.png" type="image/png"> 
+    
+    <link rel="apple-touch-icon" href="./icon.png">
+    <meta name="apple-mobile-web-app-title" content="Golf記分卡">
+    
+    <meta property="og:title" content="Golf記分卡">
+    <meta property="og:description" content="專屬高爾夫數位成績卡與抓球結算系統，Powered by 林暐棠">
+    <meta property="og:image" content="./icon.png">
 
-    <link rel="manifest" href="https://woeitarng-coder.github.io/GolfScoreCard/manifest.json?v=7">
     <style>
-        html, body {
-            margin: 0; 
-            padding: 0;
-            background-color: #121212; /* 讓動態島兩側的背景色跟導覽列一致 */
-            overflow: hidden;
-            width: 100%; 
-            height: 100vh; 
-            height: 100dvh; 
+        :root {
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-left: env(safe-area-inset-left, 0px);
+            --safe-right: env(safe-area-inset-right, 0px);
         }
         
-        /* --- 載入畫面的專屬設計 --- */
+        /* 嚴格的 100dvh 相容設定，解決 Safari 底部工具列遮擋問題 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            background-color: #000;
+            overflow: hidden;
+            font-family: -apple-system, sans-serif;
+        }
+
+        /* 滿版 iframe，完美避開動態島與底部橫條 */
+        #gas-frame {
+            border: none;
+            width: 100%;
+            height: 100%;
+            padding-top: var(--safe-top);
+            padding-bottom: var(--safe-bottom);
+            padding-left: var(--safe-left);
+            padding-right: var(--safe-right);
+            box-sizing: border-box;
+            background-color: #121212;
+        }
+
+        /* 全黑底色過場動畫 */
         #splash-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000000; /* 黑色背景，過場較柔和 */
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #000;
+            color: #fff;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             z-index: 9999;
-            transition: opacity 0.6s ease-out; /* 淡出效果 */
+            transition: opacity 0.5s ease-out;
+            padding: 20px;
         }
 
-        .splash-icon {
-            width: 120px;
-            height: 120px;
-            border-radius: 25px; 
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-
-        #splash-greeting {
-            color: #ffffff;
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            text-align: center;
-            padding: 0 20px;
-            letter-spacing: 1px;
-        }
-
-        /* 旋轉讀取動畫 */
-        .loader {
-            border: 4px solid #333;
-            border-top: 4px solid #17408B; /* 配合你這個成績卡的深藍色風格 */
+        /* 旋轉讀取圈 */
+        .spinner {
+            width: 45px;
+            height: 45px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #4CAF50;
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
             animation: spin 1s linear infinite;
+            margin-bottom: 25px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        /* --- 載入畫面設計結束 --- */
-
-        .iframe-container {
-            /* ⛳️ 核心解法：避開頂部動態島與底部橫條 */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
-            box-sizing: border-box;
-            width: 100%;
-            height: 100%;
+        @keyframes spin { 
+            100% { transform: rotate(360deg); } 
         }
 
-        iframe {
-            width: 100%; 
-            height: 100%; 
-            border: none; 
-            display: block;
+        /* 激勵語錄樣式 */
+        #quote-text {
+            font-size: 16px;
+            color: #FFD700;
+            text-align: center;
+            line-height: 1.6;
+            font-weight: bold;
+            letter-spacing: 1px;
+            max-width: 80%;
         }
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
-        <img src="https://woeitarng-coder.github.io/GolfScoreCard/icon.png?v=7" alt="App Icon" class="splash-icon">
-        <div id="splash-greeting">準備中...</div>
-        <div class="loader"></div>
+        <div class="spinner"></div>
+        <div id="quote-text">讀取中...</div>
     </div>
 
-    <div class="iframe-container">
-        <iframe id="gas-iframe" src="https://script.google.com/macros/s/AKfycbxoBqb_p8SQnJHoT2IybTbmmYIADyNljj1U_9ShMCAgPWPrPFYuCbncIl759FAVS780/exec"></iframe>
-    </div>
+    <iframe id="gas-frame" src="https://script.google.com/macros/s/AKfycby5tUraVlQj5nMZ7hSN3qFbgx6uYEnaVUjcpayJNgQ7QqDEJ7NHSOmbanBFcbr5BNWVFQ/exec"></iframe>
 
     <script>
-        // 隨機問候語清單
-        const greetings = [
-            "今天天氣真好，準備抓鳥囉！ ⛳",
-            "穩住節奏，每一桿都很關鍵！ 💪",
-            "放輕鬆，享受高爾夫的樂趣！ 😎",
-            "球道中央見！ 🏌️‍♂️",
-            "這洞推進，直接清盤！ 💰",
-            "專注當下，打出漂亮的一擊！ ✨",
-            "今天手感火燙，準備破紀錄！ 🔥"
-        ];
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const greetingElement = document.getElementById('splash-greeting');
-            const randomIndex = Math.floor(Math.random() * greetings.length);
-            greetingElement.textContent = greetings[randomIndex];
-
-            const splashScreen = document.getElementById('splash-screen');
-            const gasIframe = document.getElementById('gas-iframe');
-
-            const hideSplash = () => {
-                splashScreen.style.opacity = '0'; 
-                setTimeout(() => {
-                    splashScreen.style.display = 'none'; 
-                }, 600);
-            };
-
-            const minDisplayTime = new Promise(resolve => setTimeout(resolve, 1500));
+        // 1. 豐富的隨機激勵語錄資料庫
+        const quotes = [
+            // 心態與專注
+            "保持專注，下一桿會更好！",
+            "高爾夫是一場與自己的比賽。",
+            "深呼吸，享受揮桿的瞬間。",
+            "不管上一洞如何，現在是全新的開始。",
+            "力量來自放鬆，精準來自專心。",
+            "專注眼前的這一球，忘記背後的計分板。",
+            "最重要的一桿，永遠是下一桿。",
+            "球道再窄，也寬不過你的心胸。",
+            "高爾夫不在於打得多完美，而在於如何處理失誤。",
+            "把每一洞當作第一洞來打。",
             
-            const iframeLoaded = new Promise(resolve => {
-                gasIframe.onload = resolve;
-                setTimeout(resolve, 6000); 
-            });
+            // 輕鬆詼諧
+            "打得不好沒關係，姿勢帥最重要！",
+            "草皮殺手出動！保護好你的球桿。",
+            "水池和沙坑是球的家，它只是想回家了。",
+            "打高爾夫最大的謊言：這是我最後一顆球了。",
+            "只要球還在草地上，一切都還有希望（吧）。",
+            "計分卡是拿來激勵別人的，不是來氣自己的。",
+            "今天不抓鳥，抓個好心情也行！",
+            
+            // 節奏與技術提示
+            "上桿慢，下桿順，收桿穩。",
+            "眼睛看球，頭不要抬！",
+            "相信你的選擇，果斷揮桿。",
+            "找到你的節奏，讓球桿帶領你。"
+        ];
+        
+        // 利用 Date.now 洗牌，確保每次打開都不一樣
+        const seed = Date.now();
+        quotes.sort(() => 0.5 - Math.sin(seed));
+        const selectedQuote = quotes[0];
+        document.getElementById('quote-text').innerText = selectedQuote;
 
-            Promise.all([minDisplayTime, iframeLoaded]).then(() => {
-                hideSplash();
-            });
-        });
-    </script>
-    <script>
+        // 2. 智慧動態時間計算 (每個字 180ms，最少停留 2000ms，最多不超過 5000ms)
+        const calculatedTime = selectedQuote.length * 180;
+        const minSplashTime = Math.min(Math.max(2000, calculatedTime), 5000); 
+        const startTime = Date.now();
+        let isIframeLoaded = false;
+        
+        // 3. 雙重確認機制：確保最少播放時間 & 確保 GAS 載入完畢
+        const iframe = document.getElementById('gas-frame');
+        iframe.onload = () => {
+            isIframeLoaded = true;
+            checkAndHideSplash();
+        };
+
+        // 設定計時器，當最少閱讀時間到達時觸發檢查
+        setTimeout(() => {
+            checkAndHideSplash();
+        }, minSplashTime);
+
+        // 隱藏 Splash Screen 的核心邏輯
+        function checkAndHideSplash() {
+            const elapsedTime = Date.now() - startTime;
+            // 條件：GAS 已經載入完畢 且 已經過了最短閱讀時間
+            if (isIframeLoaded && elapsedTime >= minSplashTime) {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                setTimeout(() => splash.remove(), 500); // 動畫結束後移除 DOM
+            }
+        }
+
+        // 4. 註冊 Service Worker 大管家
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW 大管家註冊成功!', reg.scope))
+                    .catch(err => console.error('SW 大管家註冊失敗!', err));
+            });
         }
     </script>
 </body>
 </html>
-
 
